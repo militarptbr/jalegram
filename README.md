@@ -1,4 +1,8 @@
 # Jalegram - A Java Telegram Bot Library
+![Maven Central](https://img.shields.io/maven-central/v/io.github.init-io/jalegram.svg?label=Maven%20Central)
+![GitHub Release](https://img.shields.io/github/v/release/init-io/jalegram?label=release)
+[![License](https://img.shields.io/github/license/init-io/jalegram)](LICENSE)
+![downloads](https://img.shields.io/badge/downloads-1k%2Fmonth-brightgreen)
 
 Jalegram is a lightweight, user-friendly Java library designed to simplify the development of Telegram bots. It provides a straightforward interface to interact with the Telegram Bot API, offering a wide range of methods to handle messages, media, chat management, and more—all with minimal boilerplate code compared to other libraries.
 
