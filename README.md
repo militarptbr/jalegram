@@ -197,7 +197,7 @@ public class EchoBot {
 ```
 
 ## Contributing
-Contributions are welcome! Feel free to submit a pull request or open an issue on the [GitHub repository](https://github.com/yourusername/jalegram) (replace with your actual repo link).
+Contributions are welcome! Feel free to submit a pull request or open an issue on the [GitHub repository](https://github.com/init-io/jalegram) (replace with your actual repo link).
 
 ## License
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
