@@ -48,27 +48,62 @@ mvn clean install
 2. **Initialize Jalegram**: Use your bot token to instantiate the `Jalegram` class.
 
 ```java
+package io.github.initio.testproject;
+
 import io.github.initio.jalegram.Jalegram;
+import java.io.IOException;
 
-public class MyBot {
-    public static void main(String[] args) {
-        String botToken = "YOUR_BOT_TOKEN_HERE";
-        Jalegram bot = new Jalegram(botToken);
+public class Testproject {
+    static String CHAT_ID = "";
+    // Mutable variable now
 
-        try {
-            // Example: Send a message
-            String response = bot.sendMessage("CHAT_ID", "Hello from Jalegram!");
-            System.out.println(response);
+    public static void main(String[] args) throws IOException {
+        String token = "YOUR_BOT_TOKEN_HERE";  // Replace with your bot token
+        Jalegram bot = new Jalegram(token);
+        System.out.println("Bot is running...");
 
-            // Example: Get updates
-            String updates = bot.getUpdates(0);
-            System.out.println("Chat ID: " + bot.getChatId(updates));
-            System.out.println("Message Text: " + bot.getText(updates));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        Thread thread = new Thread(() -> {
+            int offset = 0;
+            while (true) {
+                try {
+                    String updatesResponse = bot.getUpdates(offset);
+
+                    // Get the latest update ID
+                    long updateId = bot.getUpdateId(updatesResponse);
+
+                    if (updateId != -1) {
+                        offset = (int) (updateId + 1);  // Update offset properly
+
+                        String response = bot.getText(updatesResponse);
+                        System.out.println(bot.getUsername(updatesResponse) + ": " + response + " UpdateId: " + updateId);
+
+                        //here inside this loop ,under this comment you can put any logic or condition to make your bot running forever .
+                        if ("get device info".equalsIgnoreCase(response)) {
+                            String reply = getDeviceInfo();
+                            if (!reply.isEmpty()) {
+                                bot.sendMessage(CHAT_ID, reply);
+                                System.out.println("Bot: " + reply);
+                            }
+                        }
+                    }
+
+                    Thread.sleep(1000);
+                } catch (IOException | InterruptedException e) {
+                    e.printStackTrace(); // good to keep this in now
+                }
+            }
+        });
+
+        thread.start();
+    }
+
+    private static String getDeviceInfo() {
+        return "Device Info: OS = " + System.getProperty("os.name") +
+               ", Version = " + System.getProperty("os.version") +
+               ", Architecture = " + System.getProperty("os.arch");
     }
 }
+
 ```
 
 Replace `"YOUR_BOT_TOKEN_HERE"` with your actual bot token and `"CHAT_ID"` with the target chat ID.
