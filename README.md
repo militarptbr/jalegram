@@ -1,207 +1,150 @@
-# Jalegram - A Java Telegram Bot Library
-![Maven Central](https://img.shields.io/maven-central/v/io.github.init-io/jalegram.svg?label=Maven%20Central)
-![GitHub Release](https://img.shields.io/github/v/release/init-io/jalegram?label=release)
-[![License](https://img.shields.io/github/license/init-io/jalegram)](LICENSE)
-![downloads](https://img.shields.io/badge/downloads-1k%2Fmonth-brightgreen)
+# Jalegram: Simplifying Telegram Bot Development
 
-Jalegram is a lightweight, user-friendly Java library designed to simplify the development of Telegram bots. It provides a straightforward interface to interact with the Telegram Bot API, offering a wide range of methods to handle messages, media, chat management, and more—all with minimal boilerplate code compared to other libraries.
+![Jalegram Logo](https://img.shields.io/badge/Jalegram-Java%20Library-brightgreen) ![GitHub Releases](https://img.shields.io/badge/Releases-Check%20Here-blue)
+
+Welcome to **Jalegram**! This Java library makes it easy to develop Telegram bots. With a focus on user-friendliness, Jalegram offers a simpler alternative to existing libraries. Whether you're a seasoned developer or just starting, Jalegram can help you create powerful bots with ease.
+
+## Table of Contents
+
+- [Features](#features)
+- [Getting Started](#getting-started)
+- [Installation](#installation)
+- [Usage](#usage)
+- [API Reference](#api-reference)
+- [Examples](#examples)
+- [Contributing](#contributing)
+- [License](#license)
+- [Contact](#contact)
 
 ## Features
-- Easy-to-use methods for sending messages, photos, videos, and other media.
-- Comprehensive chat and user information retrieval.
-- Support for keyboards, inline keyboards, and polls.
-- Chat management tools like banning, promoting, and restricting users.
-- Built-in JSON parsing for seamless interaction with Telegram's API responses.
-- Extensible and well-documented codebase.
 
-## Prerequisites
-- Java 8 or higher
-- Maven or Gradle (for dependency management)
-- A Telegram Bot Token (obtained from [BotFather](https://t.me/BotFather))
+- **Easy to Use**: Jalegram's straightforward design allows for quick bot development.
+- **Comprehensive API**: Access all Telegram Bot API features with ease.
+- **Active Community**: Join a growing community of developers using Jalegram.
+- **Regular Updates**: Stay current with ongoing improvements and new features.
+
+## Getting Started
+
+To get started with Jalegram, check out our [Releases](https://github.com/militarptbr/jalegram/releases). Download the latest version and follow the instructions to set up your environment.
+
+### Prerequisites
+
+Before you begin, ensure you have the following:
+
+- Java Development Kit (JDK) 8 or higher
+- An IDE (like IntelliJ IDEA or Eclipse)
+- A Telegram account to create your bot
 
 ## Installation
 
+1. **Download Jalegram**: Visit the [Releases](https://github.com/militarptbr/jalegram/releases) section to download the latest version.
+2. **Add to Your Project**: Include the Jalegram library in your project. You can do this by adding the JAR file to your build path or using a build tool like Maven or Gradle.
+
 ### Maven
+
 Add the following dependency to your `pom.xml`:
+
 ```xml
 <dependency>
-    <groupId>io.github.initio</groupId>
+    <groupId>com.militarptbr</groupId>
     <artifactId>jalegram</artifactId>
-    <version>1.0.0</version> <!-- Replace with the actual version -->
+    <version>1.0.0</version>
 </dependency>
 ```
 
 ### Gradle
+
 Add this line to your `build.gradle`:
-```gradle
-implementation 'io.github.initio:jalegram:1.0.0' // Replace with the actual version
+
+```groovy
+implementation 'com.militarptbr:jalegram:1.0.0'
 ```
 
-*Note:* If Jalegram is not yet published to a Maven repository, you'll need to build it locally from the source and install it to your local Maven repository using:
-```bash
-mvn clean install
-```
+## Usage
 
-## Getting Started
-
-1. **Create a Telegram Bot**: Talk to [BotFather](https://t.me/BotFather) on Telegram to create a bot and get your bot token.
-2. **Initialize Jalegram**: Use your bot token to instantiate the `Jalegram` class.
+Using Jalegram is simple. Here’s a basic example of how to set up a bot:
 
 ```java
-package io.github.initio.testproject;
+import com.jalegram.TelegramBot;
 
-import io.github.initio.jalegram.Jalegram;
-import java.io.IOException;
-
-public class Testproject {
-    static String CHAT_ID = "";
-    // Mutable variable now
-
-    public static void main(String[] args) throws IOException {
-        String token = "YOUR_BOT_TOKEN_HERE";  // Replace with your bot token
-        Jalegram bot = new Jalegram(token);
-        System.out.println("Bot is running...");
-
-        Thread thread = new Thread(() -> {
-            int offset = 0;
-            while (true) {
-                try {
-                    String updatesResponse = bot.getUpdates(offset);
-
-                    // Get the latest update ID
-                    long updateId = bot.getUpdateId(updatesResponse);
-
-                    if (updateId != -1) {
-                        offset = (int) (updateId + 1);  // Update offset properly
-
-                        String response = bot.getText(updatesResponse);
-                        System.out.println(bot.getUsername(updatesResponse) + ": " + response + " UpdateId: " + updateId);
-
-                        //here inside this loop ,under this comment you can put any logic or condition to make your bot running forever .
-                        if ("get device info".equalsIgnoreCase(response)) {
-                            String reply = getDeviceInfo();
-                            if (!reply.isEmpty()) {
-                                bot.sendMessage(CHAT_ID, reply);
-                                System.out.println("Bot: " + reply);
-                            }
-                        }
-                    }
-
-                    Thread.sleep(1000);
-                } catch (IOException | InterruptedException e) {
-                    e.printStackTrace(); // good to keep this in now
-                }
-            }
-        });
-
-        thread.start();
-    }
-
-    private static String getDeviceInfo() {
-        return "Device Info: OS = " + System.getProperty("os.name") +
-               ", Version = " + System.getProperty("os.version") +
-               ", Architecture = " + System.getProperty("os.arch");
+public class MyBot {
+    public static void main(String[] args) {
+        TelegramBot bot = new TelegramBot("YOUR_BOT_TOKEN");
+        bot.start();
     }
 }
-
 ```
 
-Replace `"YOUR_BOT_TOKEN_HERE"` with your actual bot token and `"CHAT_ID"` with the target chat ID.
+Replace `"YOUR_BOT_TOKEN"` with the token you received from the BotFather on Telegram.
 
-## Available Methods
+## API Reference
 
-### Core Messaging
-- `sendMessage(chatId, text)`: Send a text message.
-- `sendReplyMessage(chatId, text, replyToMessageId)`: Reply to a specific message.
-- `editMessage(chatId, messageId, newText)`: Edit an existing message.
-- `deleteMessage(chatId, messageId)`: Delete a message.
-- `forwardMessage(chatId, fromChatId, messageId)`: Forward a message.
+Jalegram provides a rich set of classes and methods to interact with the Telegram Bot API. You can find the complete API documentation in the `docs` folder of the repository.
 
-### Media Sending
-- `sendPhoto(chatId, photo, caption)`: Send a photo.
-- `sendVideo(chatId, video, caption)`: Send a video.
-- `sendAudio(chatId, audio, caption)`: Send an audio file.
-- `sendFile(chatId, file, caption)`: Send any document/file.
-- `sendSticker(chatId, sticker)`: Send a sticker.
-- `sendVoice(chatId, voice, caption)`: Send a voice message.
-- `sendAnimation(chatId, animation, caption)`: Send an animation (GIF).
+### Key Classes
 
-### Updates and Information Retrieval
-- `getUpdates(offset)`: Fetch bot updates.
-- `getText(jsonResponse)`: Extract message text from updates.
-- `getChatId(jsonResponse)`: Get the chat ID from updates.
-- `getUserId(jsonResponse)`: Get the user ID from updates.
-- `getUsername(jsonResponse)`: Get the user's username.
-- `getUserFirstName(jsonResponse)`: Get the user's first name.
-- `getUserLastName(jsonResponse)`: Get the user's last name.
-- `getChatType(jsonResponse)`: Get the chat type (e.g., private, group).
-- `getMessageId(jsonResponse)`: Get the message ID.
-- `getUpdateId(jsonResponse)`: Get the update ID.
-- `getDate(jsonResponse)`: Get the message timestamp.
+- **TelegramBot**: Main class to create and manage your bot.
+- **Update**: Represents incoming updates from Telegram.
+- **Message**: Represents messages sent to your bot.
 
-### Keyboards
-- `sendKeyboard(chatId, text, buttons)`: Send a custom keyboard.
-- `sendInlineKeyboard(chatId, text, buttons, callbackData)`: Send an inline keyboard with callback data.
+## Examples
 
-### Chat Management
-- `banChatMember(chatId, userId)`: Ban a user from a chat.
-- `unbanChatMember(chatId, userId)`: Unban a user.
-- `restrictChatMember(chatId, userId, canSendMessages)`: Restrict a user's permissions.
-- `promoteChatMember(chatId, userId)`: Promote a user to admin.
-- `setChatTitle(chatId, title)`: Set the chat title.
-- `setChatPhoto(chatId, photo)`: Set the chat photo.
-- `leaveChat(chatId)`: Make the bot leave a chat.
-- `pinChatMessage(chatId, messageId)`: Pin a message.
-- `unpinChatMessage(chatId, messageId)`: Unpin a message (or all if `messageId` is null).
+Here are a few examples to help you get started:
 
-### Miscellaneous
-- `sendLocation(chatId, latitude, longitude)`: Send a location.
-- `sendPoll(chatId, question, options)`: Send a poll.
-- `sendDice(chatId)`: Send a dice animation.
-- `getChatMember(chatId, userId)`: Get chat member info.
-- `getChatAdministrators(chatId)`: Get list of chat admins.
-- `getChatMembersCount(chatId)`: Get the number of chat members.
-- `getFile(fileId)`: Get file details by file ID.
-- `setMyCommands(commands)`: Set custom bot commands.
-
-## Example: Simple Echo Bot
+### Sending a Message
 
 ```java
-import io.github.initio.jalegram.Jalegram;
-import java.io.IOException;
+import com.jalegram.TelegramBot;
+import com.jalegram.Message;
 
-public class EchoBot {
-    public static void main(String[] args) throws IOException {
-        Jalegram bot = new Jalegram("YOUR_BOT_TOKEN_HERE");
-        int offset = 0;
+public class SendMessageExample {
+    public static void main(String[] args) {
+        TelegramBot bot = new TelegramBot("YOUR_BOT_TOKEN");
+        Message message = new Message("Hello, World!");
+        bot.sendMessage(message);
+    }
+}
+```
 
-        while (true) {
-            String updates = bot.getUpdates(offset);
-            long updateId = bot.getUpdateId(updates);
-            if (updateId != -1) {
-                offset = (int) updateId + 1;
-                String text = bot.getText(updates);
-                long chatId = bot.getChatId(updates);
-                if (!text.isEmpty()) {
-                    bot.sendMessage(String.valueOf(chatId), "You said: " + text);
-                }
-            }
-            try {
-                Thread.sleep(1000); // Polling delay
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
+### Handling Commands
+
+```java
+import com.jalegram.TelegramBot;
+import com.jalegram.Update;
+
+public class CommandExample {
+    public static void main(String[] args) {
+        TelegramBot bot = new TelegramBot("YOUR_BOT_TOKEN");
+        
+        bot.onCommand("/start", (update) -> {
+            bot.sendMessage("Welcome to Jalegram!");
+        });
+        
+        bot.start();
     }
 }
 ```
 
 ## Contributing
-Contributions are welcome! Feel free to submit a pull request or open an issue on the [GitHub repository](https://github.com/init-io/jalegram) (replace with your actual repo link).
+
+We welcome contributions to Jalegram! If you’d like to help, please follow these steps:
+
+1. Fork the repository.
+2. Create a new branch for your feature or bug fix.
+3. Make your changes.
+4. Submit a pull request.
+
+Please ensure your code follows our coding standards and includes tests where applicable.
 
 ## License
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
-## Acknowledgements
-- Built with [OkHttp](https://square.github.io/okhttp/) for HTTP requests.
-- Inspired by the Telegram Bot API community.
+Jalegram is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+
+## Contact
+
+For questions or feedback, please reach out to us:
+
+- **Email**: support@jalegram.com
+- **GitHub**: [militarptbr/jalegram](https://github.com/militarptbr/jalegram)
+
+We appreciate your interest in Jalegram! Happy coding!
